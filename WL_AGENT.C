@@ -73,8 +73,6 @@ struct atkinf
 };
 
 
-int	strafeangle[9] = {0,90,180,270,45,135,225,315,0};
-
 void DrawWeapon (void);
 void GiveWeapon (int weapon);
 void	GiveAmmo (int ammo);
@@ -148,7 +146,9 @@ void CheckWeaponChange (void)
 
 void ControlMovement (objtype *ob)
 {
+#define BASEMOVE 35
 	long	oldx,oldy;
+	int		magnitude;
 	int		angle,maxxmove;
 	int		angleunits;
 	long	speed;
@@ -159,45 +159,65 @@ void ControlMovement (objtype *ob)
 	oldy = player->y;
 
 //
-// side to side move
+// strafing
 //
-	if (buttonstate[bt_strafe])
+	if (buttonstate[bt_strafeleft])
 	{
-	//
-	// strafing
-	//
-	//
-		if (controlx > 0)
+		if (controly > 0)
 		{
-			angle = ob->angle - ANGLES/4;
-			if (angle < 0)
-				angle += ANGLES;
-			Thrust (angle,controlx*MOVESCALE);	// move to left
+			controly = (controly * 7) / 10;
+			magnitude = controly;
 		}
-		else if (controlx < 0)
+		else if (controly < 0)
 		{
-			angle = ob->angle + ANGLES/4;
-			if (angle >= ANGLES)
-				angle -= ANGLES;
-			Thrust (angle,-controlx*MOVESCALE);	// move to right
+			controly = (controly * 7) / 10;
+			magnitude = -controly;
 		}
+		else
+		{
+			magnitude = BASEMOVE * tics;
+		}
+
+		angle = ob->angle + ANGLES/4;
+		if (angle >= ANGLES)
+			angle -= ANGLES;
+		Thrust (angle, magnitude*MOVESCALE);	// move to left
 	}
-	else
+	else if (buttonstate[bt_straferight])
 	{
-	//
-	// not strafing
-	//
-		anglefrac += controlx;
-		angleunits = anglefrac/ANGLESCALE;
-		anglefrac -= angleunits*ANGLESCALE;
-		ob->angle -= angleunits;
+		if (controly > 0)
+		{
+			controly = (controly * 7) / 10;
+			magnitude = controly;
+		}
+		else if (controly < 0)
+		{
+			controly = (controly * 7) / 10;
+			magnitude = -controly;
+		}
+		else
+		{
+			magnitude = BASEMOVE * tics;
+		}
 
-		if (ob->angle >= ANGLES)
-			ob->angle -= ANGLES;
-		if (ob->angle < 0)
-			ob->angle += ANGLES;
-
+		angle = ob->angle - ANGLES/4;
+		if (angle < 0)
+			angle += ANGLES;
+		Thrust (angle, magnitude*MOVESCALE);	// move to right
 	}
+
+//
+// not strafing
+//
+	anglefrac += controlx;
+	angleunits = anglefrac/ANGLESCALE;
+	anglefrac -= angleunits*ANGLESCALE;
+	ob->angle -= angleunits;
+
+	if (ob->angle >= ANGLES)
+		ob->angle -= ANGLES;
+	if (ob->angle < 0)
+		ob->angle += ANGLES;
 
 //
 // forward/backwards move

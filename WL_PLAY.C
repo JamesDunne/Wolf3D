@@ -57,11 +57,11 @@ byte		update[UPDATESIZE];
 //
 boolean		mouseenabled,joystickenabled,joypadenabled,joystickprogressive;
 int			joystickport;
-int			dirscan[4] = {sc_UpArrow,sc_RightArrow,sc_DownArrow,sc_LeftArrow};
+int			dirscan[MAXBUTTONS] = {sc_W,sc_RightArrow,sc_S,sc_LeftArrow,0};
 int			buttonscan[NUMBUTTONS] =
-			{sc_Control,sc_Alt,sc_RShift,sc_Space,sc_1,sc_2,sc_3,sc_4};
-int			buttonmouse[4]={bt_attack,bt_strafe,bt_use,bt_nobutton};
-int			buttonjoy[4]={bt_attack,bt_strafe,bt_use,bt_run};
+			{sc_Control,sc_A,sc_D,sc_LShift,sc_Space,sc_1,sc_2,sc_3,sc_4};
+int			buttonmouse[MAXBUTTONS]={bt_attack,bt_use,bt_nobutton,bt_nobutton,bt_nobutton};
+int			buttonjoy[MAXBUTTONS]={bt_attack,bt_use,bt_nobutton,bt_run,bt_nobutton};
 
 int			viewsize;
 
@@ -379,10 +379,10 @@ void PollMouseMove (void)
 
 	Mouse(MDelta);
 	mousexmove = _CX;
-	mouseymove = _DX;
+	//mouseymove = _DX;
 
 	controlx += mousexmove*10/(13-mouseadjustment);
-	controly += mouseymove*20/(13-mouseadjustment);
+	//controly += mouseymove*20/(13-mouseadjustment);
 }
 
 

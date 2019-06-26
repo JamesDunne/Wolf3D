@@ -2042,9 +2042,9 @@ void DrawCtlScreen(void)
 // CUSTOMIZE CONTROLS
 //
 ////////////////////////////////////////////////////////////////////
-enum {FIRE,STRAFE,RUN,OPEN};
+enum {FIRE,STRAFELEFT,STRAFERIGHT,RUN,OPEN};
 char mbarray[4][3]={"b0","b1","b2","b3"},
-	   order[4]={RUN,OPEN,FIRE,STRAFE};
+	   order[5]={RUN,OPEN,FIRE,STRAFELEFT,STRAFERIGHT};
 
 
 void CustomControls(void)
@@ -2088,7 +2088,7 @@ void CustomControls(void)
 //
 void DefineMouseBtns(void)
 {
- CustomCtrls mouseallowed={0,1,1,1};
+ CustomCtrls mouseallowed={0,1,1,1,1};
  EnterCtrlData(2,&mouseallowed,DrawCustMouse,PrintCustMouse,MOUSE);
 }
 
@@ -2099,7 +2099,7 @@ void DefineMouseBtns(void)
 //
 void DefineJoyBtns(void)
 {
- CustomCtrls joyallowed={1,1,1,1};
+ CustomCtrls joyallowed={1,1,1,1,1};
  EnterCtrlData(5,&joyallowed,DrawCustJoy,PrintCustJoy,JOYSTICK);
 }
 
@@ -2110,7 +2110,7 @@ void DefineJoyBtns(void)
 //
 void DefineKeyBtns(void)
 {
- CustomCtrls keyallowed={1,1,1,1};
+ CustomCtrls keyallowed={1,1,1,1,1};
  EnterCtrlData(8,&keyallowed,DrawCustKeybd,PrintCustKeybd,KEYBOARDBTNS);
 }
 
@@ -2121,8 +2121,8 @@ void DefineKeyBtns(void)
 //
 void DefineKeyMove(void)
 {
-	CustomCtrls keyallowed={1,1,1,1};
-	EnterCtrlData(10,&keyallowed,DrawCustKeys,PrintCustKeys,KEYBOARDMOVE);
+ CustomCtrls keyallowed={1,1,1,1,0};
+ EnterCtrlData(10,&keyallowed,DrawCustKeys,PrintCustKeys,KEYBOARDMOVE);
 }
 
 
@@ -2131,7 +2131,7 @@ void DefineKeyMove(void)
 // ENTER CONTROL DATA FOR ANY TYPE OF CONTROL
 //
 enum {FWRD,RIGHT,BKWD,LEFT};
-int moveorder[4]={LEFT,RIGHT,FWRD,BKWD};
+int moveorder[5]={LEFT,RIGHT,FWRD,BKWD,4};
 
 void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type)
 {
@@ -2147,7 +2147,7 @@ void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*Print
  //
  // FIND FIRST SPOT IN ALLOWED ARRAY
  //
- for (j=0;j<4;j++)
+ for (j=0;j<MAXBUTTONS;j++)
    if (cust->allowed[j])
    {
 	which=j;
@@ -2239,7 +2239,7 @@ void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*Print
 	int z;
 
 
-	for (z=0;z<4;z++)
+	for (z=0;z<MAXBUTTONS;z++)
 	  if (order[which]==buttonmouse[z])
 	  {
 	   buttonmouse[z]=bt_nobutton;
@@ -2266,7 +2266,7 @@ void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*Print
 	int z;
 
 
-	for (z=0;z<4;z++)
+	for (z=0;z<MAXBUTTONS;z++)
 	  if (order[which]==buttonjoy[z])
 	  {
 	   buttonjoy[z]=bt_nobutton;
@@ -2330,7 +2330,7 @@ void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*Print
 	 {
 	  which--;
 	  if (which<0)
-	which=3;
+	which=MAXBUTTONS-1;
 	 } while(!cust->allowed[which]);
 	 redraw=1;
 	 SD_PlaySound(MOVEGUN1SND);
@@ -2342,7 +2342,7 @@ void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*Print
 	 do
 	 {
 	  which++;
-	  if (which>3)
+	  if (which>MAXBUTTONS-1)
 	which=0;
 	 } while(!cust->allowed[which]);
 	 redraw=1;
@@ -2487,7 +2487,9 @@ void DrawCustomScreen(void)
 	PrintX=CST_START+CST_SPC*2;
 	US_Print(STR_CFIRE);
 	PrintX=CST_START+CST_SPC*3;
-	US_Print(STR_CSTRAFE"\n");
+	US_Print(STR_CSTRL);
+	PrintX=CST_START+CST_SPC*4;
+	US_Print(STR_CSTRR"\n");
 	#endif
 
 	DrawWindow(5,PrintY-1,310,13,BKGDCOLOR);
@@ -2528,7 +2530,9 @@ void DrawCustomScreen(void)
 	PrintX=CST_START+CST_SPC*2;
 	US_Print(STR_CFIRE);
 	PrintX=CST_START+CST_SPC*3;
-	US_Print(STR_CSTRAFE"\n");
+	US_Print(STR_CSTRL);
+	PrintX=CST_START+CST_SPC*4;
+	US_Print(STR_CSTRR"\n");
 	#endif
 	DrawWindow(5,PrintY-1,310,13,BKGDCOLOR);
 	DrawCustJoy(0);
@@ -2553,7 +2557,9 @@ void DrawCustomScreen(void)
 	PrintX=CST_START-16+CST_SPC*2;
 	US_Print(STR_CFIRE);
 	PrintX=CST_START-16+CST_SPC*3;
-	US_Print(STR_CSTRAFE"\n");
+	US_Print(STR_CSTRL"\n");
+	PrintX=CST_START-16+CST_SPC*4;
+	US_Print(STR_CSTRR"\n");
 	#else
 	PrintX=CST_START;
 	US_Print(STR_CRUN);
@@ -2562,7 +2568,9 @@ void DrawCustomScreen(void)
 	PrintX=CST_START+CST_SPC*2;
 	US_Print(STR_CFIRE);
 	PrintX=CST_START+CST_SPC*3;
-	US_Print(STR_CSTRAFE"\n");
+	US_Print(STR_CSTRL);
+	PrintX=CST_START+CST_SPC*4;
+	US_Print(STR_CSTRR"\n");
 	#endif
 	DrawWindow(5,PrintY-1,310,13,BKGDCOLOR);
 	DrawCustKeybd(0);
@@ -2616,7 +2624,7 @@ void PrintCustMouse(int i)
 {
 	int j;
 
-	for (j=0;j<4;j++)
+	for (j=0;j<MAXBUTTONS;j++)
 		if (order[i]==buttonmouse[j])
 		{
 			PrintX=CST_START+CST_SPC*i;
@@ -2644,7 +2652,7 @@ void DrawCustMouse(int hilight)
 		CusMenu[0].active=1;
 
 	PrintY=CST_Y+13*2;
-	for (i=0;i<4;i++)
+	for (i=0;i<MAXBUTTONS;i++)
 		PrintCustMouse(i);
 }
 
@@ -2652,7 +2660,7 @@ void PrintCustJoy(int i)
 {
 	int j;
 
-	for (j=0;j<4;j++)
+	for (j=0;j<MAXBUTTONS;j++)
 		if (order[i]==buttonjoy[j])
 		{
 			PrintX=CST_START+CST_SPC*i;
@@ -2680,7 +2688,7 @@ void DrawCustJoy(int hilight)
 		CusMenu[3].active=1;
 
 	PrintY=CST_Y+13*5;
-	for (i=0;i<4;i++)
+	for (i=0;i<MAXBUTTONS;i++)
 		PrintCustJoy(i);
 }
 
@@ -2702,7 +2710,7 @@ void DrawCustKeybd(int hilight)
 	SETFONTCOLOR(color,BKGDCOLOR);
 
 	PrintY=CST_Y+13*8;
-	for (i=0;i<4;i++)
+	for (i=0;i<MAXBUTTONS;i++)
 		PrintCustKeybd(i);
 }
 
@@ -2723,7 +2731,7 @@ void DrawCustKeys(int hilight)
 	SETFONTCOLOR(color,BKGDCOLOR);
 
 	PrintY=CST_Y+13*10;
-	for (i=0;i<4;i++)
+	for (i=0;i<MAXBUTTONS;i++)
 		PrintCustKeys(i);
 }
 

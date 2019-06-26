@@ -84,7 +84,7 @@
 #define CST_X		20
 #define CST_Y		48
 #define CST_START	60
-#define CST_SPC	60
+#define CST_SPC	50
 
 
 //
@@ -101,7 +101,7 @@ typedef struct {
 		} CP_itemtype;
 
 typedef struct {
-		int allowed[4];
+		int allowed[MAXBUTTONS];
 		} CustomCtrls;
 
 extern CP_itemtype far MainMenu[],far NewEMenu[];

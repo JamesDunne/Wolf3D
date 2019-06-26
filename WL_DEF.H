@@ -7,6 +7,7 @@
 #include <MATH.H>
 #include <VALUES.H>
 
+#define MAXBUTTONS 5
 #include "WL_MENU.H"
 
 #ifdef SPANISH
@@ -676,11 +677,12 @@ typedef struct objstruct
 } objtype;
 
 
-#define NUMBUTTONS	8
+#define NUMBUTTONS	9
 enum	{
 	bt_nobutton=-1,
 	bt_attack=0,
-	bt_strafe,
+	bt_strafeleft,
+	bt_straferight,
 	bt_run,
 	bt_use,
 	bt_readyknife,
@@ -892,10 +894,10 @@ extern	int			extravbls;
 //
 extern	boolean		mouseenabled,joystickenabled,joypadenabled,joystickprogressive;
 extern	int			joystickport;
-extern	int			dirscan[4];
+extern	int			dirscan[MAXBUTTONS];
 extern	int			buttonscan[NUMBUTTONS];
-extern	int			buttonmouse[4];
-extern	int			buttonjoy[4];
+extern	int			buttonmouse[MAXBUTTONS];
+extern	int			buttonjoy[MAXBUTTONS];
 
 extern	boolean		buttonheld[NUMBUTTONS];
 

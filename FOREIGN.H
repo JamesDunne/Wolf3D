@@ -62,7 +62,9 @@
 #define	STR_CRUN	"Run"
 #define STR_COPEN	"Open"
 #define STR_CFIRE	"Fire"
-#define STR_CSTRAFE	"Strafe"
+//#define STR_CSTRAFE	"Strafe"
+#define STR_CSTRL      "L"
+#define STR_CSTRR      "R"
 
 #define	STR_LEFT	"Left"
 #define	STR_RIGHT	"Right"
