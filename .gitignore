@@ -1,0 +1,5 @@
+*.BAK
+OBJ/*.OBJ
+OBJ/*.EXE
+OBJ/*.MAP
+*.WL6
